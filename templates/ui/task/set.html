@@ -1,0 +1,11 @@
+<div class="menu-header">Set task: <a href="#" class="action-close">X</a></div>
+
+<ul>
+    <% $.each(task_types, function(index, type) { %>
+        <li><a href="#" class="action-select-task" data-index="<%= index %>"><%= type.label %></a></li>
+
+    <% }); %>
+
+    <li><a href="#" class="action-clear-task" >Cancel task</a></li>
+
+</ul>

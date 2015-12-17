@@ -1,0 +1,93 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01//EN" "http://www.w3.org/TR/html4/strict.dtd">
+<html>
+    <head>
+        <title>Puddle Beta</title>
+
+        <link rel="shortcut icon" href="{{ STATIC_URL }}/img/favicon.png">
+
+
+        /* Used for the UI */
+        <script type="text/javascript" src="js/libs/jquery.min.js"></script>
+        <script type="text/javascript" src="js/libs/underscore.js"></script>
+
+
+        /* Libraries used */
+        <script type="text/javascript" src="js/libs/astar.js"></script>
+
+        /* UI templates */
+        <script type="text/javascript" src="js/_template_cache.js"></script>
+
+        /* The game engine */
+        <script type="text/javascript" src="js/template.js"></script>
+        <script type="text/javascript" src="js/world.js"></script>
+        <script type="text/javascript" src="js/render.js"></script>
+        <script type="text/javascript" src="js/engine.js"></script>
+        <script type="text/javascript" src="js/control.js"></script>
+        <script type="text/javascript" src="js/content.js"></script>
+        <script type="text/javascript" src="js/object.js"></script>
+        <script type="text/javascript" src="js/location.js"></script>
+        <script type="text/javascript" src="js/task.js"></script>
+        <script type="text/javascript" src="js/actors.js"></script>
+        <script type="text/javascript" src="js/utils.js"></script>
+        <script type="text/javascript" src="js/fx.js"></script>
+
+
+        /* UI */
+        <script type="text/javascript" src="js/ui/command.js"></script>
+
+        /* Resources */
+        <script type="text/javascript" src="js/objects/plant.js"></script>
+        <script type="text/javascript" src="js/objects/food.js"></script>
+        <script type="text/javascript" src="js/objects/materials/wood.js"></script>
+        <script type="text/javascript" src="js/objects/materials/tree.js"></script>
+        <script type="text/javascript" src="js/objects/materials/grain.js"></script>
+        <script type="text/javascript" src="js/objects/materials/wheat.js"></script>
+        <script type="text/javascript" src="js/objects/materials/potato.js"></script>
+        <script type="text/javascript" src="js/objects/materials/potato_plant.js"></script>
+
+        /* Buildings */
+        <script type="text/javascript" src="js/objects/building.js"></script>
+        <script type="text/javascript" src="js/objects/building/house.js"></script>
+
+        /* Tasks */
+        <script type="text/javascript" src="js/tasks/build.js"></script>
+        <script type="text/javascript" src="js/tasks/fetch.js"></script>
+        <script type="text/javascript" src="js/tasks/gather.js"></script>
+        <script type="text/javascript" src="js/tasks/pile.js"></script>
+        <script type="text/javascript" src="js/tasks/drop.js"></script>
+        <script type="text/javascript" src="js/tasks/plant.js"></script>
+        <script type="text/javascript" src="js/tasks/consume.js"></script>
+        <script type="text/javascript" src="js/tasks/rest.js"></script>
+
+        /* Actors */
+        <script type="text/javascript" src="js/actors/worker.js"></script>
+
+
+        /* Tests */
+        <script type="text/javascript" src="js/tests/base.js"></script>
+        <script type="text/javascript" src="js/tests/harvest.js"></script>
+        <script type="text/javascript" src="js/tests/build.js"></script>
+
+
+
+        <script type="text/javascript" src="js/tiled.js"></script>
+
+        <link rel="stylesheet" href="css/tiles.css" type="text/css">
+        <link rel="stylesheet" href="css/menu.css" type="text/css">
+
+
+    </head>
+    <body>
+        <div style="position: relative;">
+
+            <canvas id="map" width="2000" height="2000"></canvas>
+            <canvas id="cursor" width="2000" height="2000"></canvas>
+            <canvas id="items" width="2000" height="2000"></canvas>
+            <canvas id="fx" width="2000" height="2000"></canvas>
+
+            <div id="context-menu" class="context-menu"></div>
+
+        </div>
+    </body>
+</html>
+

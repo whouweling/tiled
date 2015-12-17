@@ -1,0 +1,45 @@
+
+
+div.context-menu {
+
+    position: absolute;
+
+    top: 0px;
+    left: 0px;
+
+    border: 1px solid #ccc;
+    background: #555;
+    color: #fff;
+    z-index: 3000;
+
+}
+
+div.context-menu  a {
+    color: #fff;
+}
+
+div.context-menu .menu-header {
+    background: #fff;
+    color: #555;
+    padding: 1px;
+    border-bottom: 1px solid #fff;
+}
+
+div.context-menu .menu-header a.action-close {
+    color: #444;
+}
+
+div.context-menu ul {
+    padding: 0px;
+    margin: 0px;
+    list-style-type: none;
+}
+
+div.context-menu ul li {
+    border-bottom: 1px solid #ccc;
+    padding: 3px;
+}
+
+div.context-menu ul li:last-child {
+    border-bottom: 0px;
+}
