@@ -28,8 +28,8 @@ class window.Control
     tile_height = this.renderer.tile_height
 
     # Translate x,y to isometric x,y
-    x = (((cursor_x - this.renderer.offset_x)  * .25) - 10)
-    y = ((cursor_y - this.renderer.offset_y) - 100) * this.renderer.zoom
+    x = (((cursor_x - this.renderer.viewport_offset_x)  * .25) - 10)
+    y = ((cursor_y - this.renderer.viewport_offset_y) - 100) * this.renderer.zoom
 
 
     return {
@@ -45,7 +45,10 @@ class window.Control
     ix = x * tile_width - (y * tile_width)
     iy = y * tile_height + (x * tile_height)
 
-    height = this.world.map[x][y].get_vertical_offset()
+    ox = x + this.renderer.x_offset
+    oy = y + this.renderer.y_offset
+
+    height = this.world.map[ox][oy].get_vertical_offset()
 
     this.renderer.draw_tile(this.cursor_context, 0, ix, iy, height)
 
@@ -70,8 +73,24 @@ class window.Control
       else
         this.show_cursor(cursor.x, cursor.y)
 
+
+      if this.move_map
+        this.renderer.x_offset = this.base_offset_x + (this.move_map.x - cursor.x)
+        this.renderer.y_offset = this.base_offset_y + (this.move_map.y - cursor.y)
+
+
+
+
     $(control_surface).mousedown (event) =>
-      this.select = this.translate(event.offsetX, event.offsetY)
+      console.debug event
+
+      if event.button == 0
+        this.select = this.translate(event.offsetX, event.offsetY)
+
+      if event.button == 2
+        this.move_map = this.translate(event.offsetX, event.offsetY)
+        this.base_offset_x = this.renderer.x_offset
+        this.base_offset_y = this.renderer.y_offset
 
     $(control_surface).mouseup (event) =>
 
@@ -84,7 +103,14 @@ class window.Control
         start = cursor
         end = cursor
 
-      new window.Command(this.world, start, end, mouse_x = event.pageX, mouse_y = event.pageY)
+      if not this.move_map
+        start.x = start.x + this.renderer.x_offset
+        start.y = start.y + this.renderer.y_offset
+        end.x = end.x + this.renderer.x_offset
+        end.y = end.y + this.renderer.y_offset
+        new window.Command(this.world, start, end, mouse_x = event.pageX, mouse_y = event.pageY)
 
       this.select = null
+      this.move_map = null
+
 

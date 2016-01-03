@@ -11,7 +11,7 @@ class window.Engine
   constructor: ->
 
     this.content = new Content(window.RESOURCES)
-    this.world = new window.World(20, 20)
+    this.world = new window.World(250, 250)
     this.render = new window.Render(this.world, this.content)
     this.control = new window.Control(this.world, this.content, this.render)
 
@@ -19,6 +19,8 @@ class window.Engine
 
     this.world.generate()
     this.world.populate()
+
+    this.render.resize()
 
     this.content.load =>
 

@@ -16,8 +16,8 @@ class window.Effect
   constructor: (x, y) ->
     this.x = x
     this.y = y
-    this.offset_x = 0
-    this.offset_y = 0
+    this.viewport_offset_x = 0
+    this.viewport_offset_y = 0
     this.lifetime = 10
     effects.unshift(this)
 
@@ -37,7 +37,7 @@ class window.IndicatorEffect extends Effect
     super(x,y)
 
   run: ->
-    this.offset_y = this.offset_y - 1
+    this.viewport_offset_y = this.viewport_offset_y - 1
     super()
 
 

@@ -49,5 +49,6 @@ window.TASK_TYPES = [
 
 
 $(document).ready =>
+
   engine = new window.Engine()
   engine.start()

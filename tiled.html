@@ -1,4 +1,4 @@
-<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01//EN" "http://www.w3.org/TR/html4/strict.dtd">
+<!DOCTYPE html>
 <html>
     <head>
         <title>Puddle Beta</title>
@@ -6,18 +6,18 @@
         <link rel="shortcut icon" href="{{ STATIC_URL }}/img/favicon.png">
 
 
-        /* Used for the UI */
+        <!-- Used for the UI -->
         <script type="text/javascript" src="js/libs/jquery.min.js"></script>
         <script type="text/javascript" src="js/libs/underscore.js"></script>
 
 
-        /* Libraries used */
+        <!-- Libraries used -->
         <script type="text/javascript" src="js/libs/astar.js"></script>
 
-        /* UI templates */
+        <!-- UI templates -->
         <script type="text/javascript" src="js/_template_cache.js"></script>
 
-        /* The game engine */
+        <!-- The game engine -->
         <script type="text/javascript" src="js/template.js"></script>
         <script type="text/javascript" src="js/world.js"></script>
         <script type="text/javascript" src="js/render.js"></script>
@@ -32,10 +32,10 @@
         <script type="text/javascript" src="js/fx.js"></script>
 
 
-        /* UI */
+        <!-- UI -->
         <script type="text/javascript" src="js/ui/command.js"></script>
 
-        /* Resources */
+        <!-- Resources -->
         <script type="text/javascript" src="js/objects/plant.js"></script>
         <script type="text/javascript" src="js/objects/food.js"></script>
         <script type="text/javascript" src="js/objects/materials/wood.js"></script>
@@ -45,11 +45,11 @@
         <script type="text/javascript" src="js/objects/materials/potato.js"></script>
         <script type="text/javascript" src="js/objects/materials/potato_plant.js"></script>
 
-        /* Buildings */
+        <!-- Buildings -->
         <script type="text/javascript" src="js/objects/building.js"></script>
         <script type="text/javascript" src="js/objects/building/house.js"></script>
 
-        /* Tasks */
+        <!-- Tasks -->
         <script type="text/javascript" src="js/tasks/build.js"></script>
         <script type="text/javascript" src="js/tasks/fetch.js"></script>
         <script type="text/javascript" src="js/tasks/gather.js"></script>
@@ -59,11 +59,11 @@
         <script type="text/javascript" src="js/tasks/consume.js"></script>
         <script type="text/javascript" src="js/tasks/rest.js"></script>
 
-        /* Actors */
+        <!-- Actors -->
         <script type="text/javascript" src="js/actors/worker.js"></script>
 
 
-        /* Tests */
+        <!-- Tests -->
         <script type="text/javascript" src="js/tests/base.js"></script>
         <script type="text/javascript" src="js/tests/harvest.js"></script>
         <script type="text/javascript" src="js/tests/build.js"></script>
@@ -77,17 +77,21 @@
 
 
     </head>
-    <body>
+    <body oncontextmenu="return false;">
         <div style="position: relative;">
 
-            <canvas id="map" width="2000" height="2000"></canvas>
-            <canvas id="cursor" width="2000" height="2000"></canvas>
+            <canvas id="map" width="2000" height="2000" ></canvas>
+            <canvas id="cursor" width="2000" height="2000" ></canvas>
             <canvas id="items" width="2000" height="2000"></canvas>
             <canvas id="fx" width="2000" height="2000"></canvas>
 
             <div id="context-menu" class="context-menu"></div>
 
         </div>
+    <script>
+
+
+    </script>
     </body>
 </html>
 
