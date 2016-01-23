@@ -152,7 +152,7 @@ class window.Render
 
 
         if height < this.world.water_level
-          this.draw_tile(this.map_context, 2, ix, iy, this.world.water_level, light)
+          this.draw_tile(this.map_context, 2, ix, iy, this.world.water_level, height)
 
 
         this.map_context.fillStyle = '#ccc'

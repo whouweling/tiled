@@ -110,7 +110,7 @@
               this.draw_tile(this.map_context, 20, ix, iy, height, light);
             }
             if (height < this.world.water_level) {
-              this.draw_tile(this.map_context, 2, ix, iy, this.world.water_level, light);
+              this.draw_tile(this.map_context, 2, ix, iy, this.world.water_level, height);
             }
             this.map_context.fillStyle = '#ccc';
             task = this.world.task[ox][oy];
