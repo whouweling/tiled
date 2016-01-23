@@ -6,6 +6,7 @@
 
 body {
     background: #000;
+    overflow: hidden;
 }
 
 #world {

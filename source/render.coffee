@@ -23,7 +23,6 @@ class window.Render
     this.viewport_width = 10
     this.viewport_height = 10
 
-
     this.zoom = 1
 
     this.map_context = document.getElementById("map").getContext("2d")
@@ -32,10 +31,10 @@ class window.Render
 
 
   resize: ->
-    this.viewport_width = parseInt(window.innerWidth / this.tile_width / 2,  10)
-    this.viewport_height = parseInt(window.innerHeight / this.tile_height / 2, 10)
+    this.viewport_width = parseInt(window.innerWidth / (this.tile_width * this.zoom) / 2,  10)
+    this.viewport_height = parseInt(window.innerHeight / (this.tile_height * this.zoom) / 2, 10)
     this.viewport_offset_x = window.innerWidth / 2
-    this.viewport_offset_y = 0
+    this.viewport_offset_y = -120
 
   update: () ->
 
@@ -124,25 +123,53 @@ class window.Render
         tile = this.world.map[ox][oy].tile
         height = this.world.map[ox][oy].get_vertical_offset()
 
-        if this.world.map[ox][oy].height < this.world.water_level
-          height=0
 
         ix = x * this.tile_width - (y * this.tile_width)
         iy = y * this.tile_height + (x * this.tile_height)
-
-        #for steps in [ 0 .. height ]
         light = this.world.light[ox][oy]
+
+        if height < this.world.water_level
+          light = 10
+
+#        for steps in [ -2 .. height ]
+#         if steps < height
+#           light = 15
+#          else
+#           light = this.world.light[ox][oy]
+#         this.draw_tile(this.map_context, tile, ix, iy, steps, light)
+
         this.draw_tile(this.map_context, tile, ix, iy, height, light)
+
+        # Shadow
+        if oy > 1 and  this.world.map[ox][oy-1].height > height
+          this.draw_tile(this.map_context, 18, ix, iy, height, light)
+
+        if ox > 1 and  this.world.map[ox-1][oy].height > height
+          this.draw_tile(this.map_context, 19, ix, iy, height, light)
+
+        if this.world.items[ox][oy]
+          this.draw_tile(this.map_context, 20, ix, iy, height, light)
+
+
+        if height < this.world.water_level
+          this.draw_tile(this.map_context, 2, ix, iy, this.world.water_level, light)
+
 
         this.map_context.fillStyle = '#ccc'
 
-        if this.world.task[ox][oy]
+        task = this.world.task[ox][oy]
+
+        if task
 #          image = this.content.sprites[this.world.task[x][y].get_tile()][height_to_tile]
 #
 #          this.map_context.drawImage(image, ix + this.offset_x, iy + this.offset_y - height * 3)
 
+          if task.work > 0
+            this.map_context.fillText(task.work, ix + this.viewport_offset_x + this.tile_width / 2, (iy + this.viewport_offset_y - height * 3) + 85)
+
+
           if not this.world.items[ox][oy]
-            this.map_context.fillText(this.world.task[ox][oy].abbr, ix + this.viewport_offset_x + 17, (iy + this.viewport_offset_y - height * 3) + 85)
+            this.map_context.fillText(task.abbr, ix + this.viewport_offset_x + 17, (iy + this.viewport_offset_y - height * 3) + 85)
 
         if this.world.items[ox][oy]
 
@@ -155,7 +182,8 @@ class window.Render
 
         if this.world.actors[ox][oy]
 
-           tile = this.world.actors[ox][oy].get_tile()
+           actor = this.world.actors[ox][oy]
+           tile = actor.get_tile()
            this.draw_tile(this.map_context, tile, ix, iy, height, light)
 
            if this.world.actors[ox][oy].carry

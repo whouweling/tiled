@@ -11,7 +11,7 @@
     }
 
     House.prototype.get_tile = function() {
-      return 6;
+      return 16;
     };
 
     House.prototype.created = function() {

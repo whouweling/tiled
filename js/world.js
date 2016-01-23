@@ -351,7 +351,7 @@
           var j, ref1, results1;
           results1 = [];
           for (y = j = 1, ref1 = this.height; 1 <= ref1 ? j <= ref1 : j >= ref1; y = 1 <= ref1 ? ++j : --j) {
-            results1.push(this.map[x][y] = new window.Grass(this, x, y, this.height_map[x][y]));
+            results1.push(this.map[x][y] = new window.Beach(this, x, y, this.height_map[x][y]));
           }
           return results1;
         }).call(this));
@@ -394,8 +394,8 @@
           plains[x][y] = Math.floor(Math.random() * 10);
         }
       }
-      this.smoothen(plains, 6);
-      this.normalize(plains, 3);
+      this.smoothen(plains, 10);
+      this.normalize(plains, 4);
       this.lightmap();
       results = [];
       for (x = k = 1, ref2 = this.width; 1 <= ref2 ? k <= ref2 : k >= ref2; x = 1 <= ref2 ? ++k : --k) {
@@ -404,21 +404,26 @@
           var l, ref3, results1;
           results1 = [];
           for (y = l = 1, ref3 = this.height; 1 <= ref3 ? l <= ref3 : l >= ref3; y = 1 <= ref3 ? ++l : --l) {
-            this.map[x][y] = new window.Grass(this, x, y, this.height_map[x][y]);
-            if (plains[x][y] === 1) {
-              this.map[x][y] = new window.Grass(this, x, y, this.height_map[x][y]);
-            }
-            if (Math.floor(Math.random() * 50) === 1) {
-              this.items[x][y] = new window.Wheat(this, x, y, this.height_map[x][y]);
-            }
-            if (plains[x][y] === 3) {
-              this.items[x][y] = new window.Tree(this, x, y, this.height_map[x][y]);
-            }
+            this.map[x][y] = new window.Plains(this, x, y, this.height_map[x][y]);
             if (this.height_map[x][y] < this.water_level) {
-              this.map[x][y] = new window.Water(this, x, y, this.height_map[x][y]);
-              results1.push(this.items[x][y] = null);
+              results1.push(this.map[x][y] = new window.Dirt(this, x, y, this.height_map[x][y]));
             } else {
-              results1.push(void 0);
+              if (Math.floor(Math.random() * 40) === 1) {
+                this.items[x][y] = new window.Wheat(this, x, y, this.height_map[x][y]);
+              }
+              if (plains[x][y] === 4) {
+                this.items[x][y] = new window.Tree(this, x, y, this.height_map[x][y]);
+              }
+              if (x > 1 && y > 1 && x < this.width - 2 && y < this.height - 2) {
+                if ((this.height_map[x + 1][y] < this.water_level) || (this.height_map[x - 1][y] < this.water_level) || (this.height_map[x][y - 1] < this.water_level) || (this.height_map[x][y + 1] < this.water_level)) {
+                  this.map[x][y] = new window.Beach(this, x, y, this.height_map[x][y]);
+                  results1.push(this.items[x][y] = null);
+                } else {
+                  results1.push(void 0);
+                }
+              } else {
+                results1.push(void 0);
+              }
             }
           }
           return results1;

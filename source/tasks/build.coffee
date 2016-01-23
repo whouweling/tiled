@@ -3,9 +3,7 @@ class window.BuildTask extends window.Task
 
   get_tile: ->
     if this.material_at_build
-      return "construction"
-    else
-      return "command"
+      return 12
 
   constructor: (world, x, y, options) ->
     super(world, x, y, options)
@@ -45,9 +43,10 @@ class window.BuildTask extends window.Task
 
         if material_at_location instanceof need.material
           this.materials[index] = this.materials[index] + 1
-      this.world.remove_item(material_at_location)
-      this.material_at_build = true
 
+      this.world.remove_item(material_at_location)
+      if not this.material_at_build
+        this.world.add_item(new Buildsite(this.world, this.x, this.y))
 
     # Do we need more material?
     for index, need of this.options.needs

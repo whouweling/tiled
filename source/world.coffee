@@ -289,7 +289,7 @@ class window.World
     for x in [1 .. this.width]
       this.map[x] = []
       for y in [1 .. this.height]
-        this.map[x][y] = new window.Grass(this, x, y, this.height_map[x][y])
+        this.map[x][y] = new window.Beach(this, x, y, this.height_map[x][y])
 
 
   lightmap: ->
@@ -316,29 +316,38 @@ class window.World
       for y in [1 .. this.height]
         plains[x][y] = Math.floor((Math.random()*10))
 
-    this.smoothen(plains, 6)
-    this.normalize(plains, 3)
+    this.smoothen(plains, 10)
+    this.normalize(plains, 4)
     this.lightmap()
 
     for x in [1 .. this.width]
       this.map[x] = []
       for y in [1 .. this.height]
 
-        this.map[x][y] = new window.Grass(this, x, y, this.height_map[x][y])
-
-        if plains[x][y] == 1
-          this.map[x][y] = new window.Grass(this, x, y, this.height_map[x][y])
-
-        if Math.floor((Math.random()*50)) == 1
-          this.items[x][y] = new window.Wheat(this, x, y, this.height_map[x][y])
-
-        if plains[x][y] == 3
-          this.items[x][y] = new window.Tree(this, x, y, this.height_map[x][y])
+        this.map[x][y] = new window.Plains(this, x, y, this.height_map[x][y])
 
 
         if this.height_map[x][y] < this.water_level
-          this.map[x][y] = new window.Water(this, x, y, this.height_map[x][y])
-          this.items[x][y] = null
+          this.map[x][y] = new window.Dirt(this, x, y, this.height_map[x][y])
+        else
+
+          if Math.floor((Math.random()*40)) == 1
+            this.items[x][y] = new window.Wheat(this, x, y, this.height_map[x][y])
+
+          if plains[x][y] == 4
+            this.items[x][y] = new window.Tree(this, x, y, this.height_map[x][y])
+
+          if x > 1 and y > 1 and x < this.width - 2 and y < this.height - 2
+            if (this.height_map[x+1][y] < this.water_level) or \
+               (this.height_map[x-1][y] < this.water_level) or \
+               (this.height_map[x][y-1] < this.water_level) or \
+               (this.height_map[x][y+1] < this.water_level)
+              this.map[x][y] = new window.Beach(this, x, y, this.height_map[x][y])
+              this.items[x][y] = null
+
+#        if this.height_map[x][y] < this.water_level
+#          this.map[x][y] = new window.Water(this, x, y, this.height_map[x][y])
+#          this.items[x][y] = null
 
 
 

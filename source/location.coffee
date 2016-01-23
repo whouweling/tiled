@@ -46,13 +46,16 @@ class window.Indicator extends window.Location
   tile: 4
 
 
-class window.Grass extends window.Location
-
+class window.Plains extends window.Location
   tile: 3
 
-class window.Dirt extends window.Location
 
+class window.Dirt extends window.Location
   tile: 1
+
+
+class window.Beach extends window.Location
+  tile: 12
 
 class window.Water extends window.Location
 

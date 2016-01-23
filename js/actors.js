@@ -24,8 +24,6 @@
       this.target_x = x;
       this.target_y = y;
       this.tasks = [];
-      this.tile_offset_x = Math.random() * 10 - 20;
-      this.tile_offset_y = Math.random() * 10 - 20;
       this.id = this.world.get_id();
     }
 

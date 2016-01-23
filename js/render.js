@@ -22,10 +22,10 @@
     }
 
     Render.prototype.resize = function() {
-      this.viewport_width = parseInt(window.innerWidth / this.tile_width / 2, 10);
-      this.viewport_height = parseInt(window.innerHeight / this.tile_height / 2, 10);
+      this.viewport_width = parseInt(window.innerWidth / (this.tile_width * this.zoom) / 2, 10);
+      this.viewport_height = parseInt(window.innerHeight / (this.tile_height * this.zoom) / 2, 10);
       this.viewport_offset_x = window.innerWidth / 2;
-      return this.viewport_offset_y = 0;
+      return this.viewport_offset_y = -120;
     };
 
     Render.prototype.update = function() {
@@ -69,7 +69,7 @@
     };
 
     Render.prototype.update_map = function() {
-      var height, i, ix, iy, light, ox, oy, ref, results, tile, x, y;
+      var actor, height, i, ix, iy, light, ox, oy, ref, results, task, tile, x, y;
       this.map_context.clearRect(0, 0, 2000, 2000);
       results = [];
       for (x = i = 1, ref = this.viewport_width; 1 <= ref ? i <= ref : i >= ref; x = 1 <= ref ? ++i : --i) {
@@ -93,17 +93,33 @@
             }
             tile = this.world.map[ox][oy].tile;
             height = this.world.map[ox][oy].get_vertical_offset();
-            if (this.world.map[ox][oy].height < this.world.water_level) {
-              height = 0;
-            }
             ix = x * this.tile_width - (y * this.tile_width);
             iy = y * this.tile_height + (x * this.tile_height);
             light = this.world.light[ox][oy];
+            if (height < this.world.water_level) {
+              light = 10;
+            }
             this.draw_tile(this.map_context, tile, ix, iy, height, light);
+            if (oy > 1 && this.world.map[ox][oy - 1].height > height) {
+              this.draw_tile(this.map_context, 18, ix, iy, height, light);
+            }
+            if (ox > 1 && this.world.map[ox - 1][oy].height > height) {
+              this.draw_tile(this.map_context, 19, ix, iy, height, light);
+            }
+            if (this.world.items[ox][oy]) {
+              this.draw_tile(this.map_context, 20, ix, iy, height, light);
+            }
+            if (height < this.world.water_level) {
+              this.draw_tile(this.map_context, 2, ix, iy, this.world.water_level, light);
+            }
             this.map_context.fillStyle = '#ccc';
-            if (this.world.task[ox][oy]) {
+            task = this.world.task[ox][oy];
+            if (task) {
+              if (task.work > 0) {
+                this.map_context.fillText(task.work, ix + this.viewport_offset_x + this.tile_width / 2, (iy + this.viewport_offset_y - height * 3) + 85);
+              }
               if (!this.world.items[ox][oy]) {
-                this.map_context.fillText(this.world.task[ox][oy].abbr, ix + this.viewport_offset_x + 17, (iy + this.viewport_offset_y - height * 3) + 85);
+                this.map_context.fillText(task.abbr, ix + this.viewport_offset_x + 17, (iy + this.viewport_offset_y - height * 3) + 85);
               }
             }
             if (this.world.items[ox][oy]) {
@@ -114,7 +130,8 @@
               }
             }
             if (this.world.actors[ox][oy]) {
-              tile = this.world.actors[ox][oy].get_tile();
+              actor = this.world.actors[ox][oy];
+              tile = actor.get_tile();
               this.draw_tile(this.map_context, tile, ix, iy, height, light);
               if (this.world.actors[ox][oy].carry) {
                 tile = this.world.actors[ox][oy].carry.get_tile();

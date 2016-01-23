@@ -70,16 +70,16 @@
 
   })(window.Location);
 
-  window.Grass = (function(superClass) {
-    extend(Grass, superClass);
+  window.Plains = (function(superClass) {
+    extend(Plains, superClass);
 
-    function Grass() {
-      return Grass.__super__.constructor.apply(this, arguments);
+    function Plains() {
+      return Plains.__super__.constructor.apply(this, arguments);
     }
 
-    Grass.prototype.tile = 3;
+    Plains.prototype.tile = 3;
 
-    return Grass;
+    return Plains;
 
   })(window.Location);
 
@@ -93,6 +93,19 @@
     Dirt.prototype.tile = 1;
 
     return Dirt;
+
+  })(window.Location);
+
+  window.Beach = (function(superClass) {
+    extend(Beach, superClass);
+
+    function Beach() {
+      return Beach.__super__.constructor.apply(this, arguments);
+    }
+
+    Beach.prototype.tile = 12;
+
+    return Beach;
 
   })(window.Location);
 
