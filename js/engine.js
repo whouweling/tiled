@@ -13,7 +13,7 @@
 
     function Engine() {
       this.content = new Content(window.RESOURCES);
-      this.world = new window.World(250, 250);
+      this.world = new window.World(250, 250, 29399);
       this.render = new window.Render(this.world, this.content);
       this.control = new window.Control(this.world, this.content, this.render);
     }
@@ -26,7 +26,7 @@
         return function() {
           var render_frame, task_queue_delay, world_cycle_delay;
           _this.control.init();
-          _this.load_test_world();
+          _this.world.add_item(new window.House(_this.world, Math.round(_this.world.width / 2), Math.round(_this.world.height / 2)));
           _this.render.update();
           task_queue_delay = 0;
           world_cycle_delay = 0;
@@ -66,7 +66,6 @@
           this.world.height_map[5 + x][5 + y] = 1;
         }
       }
-      console.debug("hier?");
       this.world.add_item(new window.House(this.world, 10, 12));
       this.world.add_item(new window.Wood(this.world, 15, 11, 10));
       return this.world.changed = true;

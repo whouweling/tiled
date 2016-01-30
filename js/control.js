@@ -26,8 +26,8 @@
       var tile_height, tile_width, x, y;
       tile_width = this.renderer.tile_width;
       tile_height = this.renderer.tile_height;
-      x = ((cursor_x - this.renderer.viewport_offset_x) * .25) - 10;
-      y = ((cursor_y - this.renderer.viewport_offset_y) - 100) * this.renderer.zoom;
+      x = (((cursor_x - this.renderer.viewport_offset_x) * .25) - 10) / this.renderer.zoom;
+      y = ((cursor_y - this.renderer.viewport_offset_y) - 100) / this.renderer.zoom;
       return {
         x: Math.round((x / tile_height) + (y / tile_width)),
         y: Math.round((y / tile_width) - (x / tile_height))
@@ -66,8 +66,8 @@
             _this.show_cursor(cursor.x, cursor.y);
           }
           if (_this.move_map) {
-            _this.renderer.x_offset = _this.base_offset_x + (_this.move_map.x - cursor.x);
-            return _this.renderer.y_offset = _this.base_offset_y + (_this.move_map.y - cursor.y);
+            _this.renderer.x_offset = parseInt(_this.base_offset_x + (_this.move_map.x - cursor.x) * _this.renderer.zoom, 10);
+            return _this.renderer.y_offset = parseInt(_this.base_offset_y + (_this.move_map.y - cursor.y) * _this.renderer.zoom, 10);
           }
         };
       })(this));

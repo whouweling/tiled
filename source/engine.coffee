@@ -11,7 +11,7 @@ class window.Engine
   constructor: ->
 
     this.content = new Content(window.RESOURCES)
-    this.world = new window.World(250, 250)
+    this.world = new window.World(250, 250, 29399)
     this.render = new window.Render(this.world, this.content)
     this.control = new window.Control(this.world, this.content, this.render)
 
@@ -26,10 +26,14 @@ class window.Engine
 
       this.control.init()
 
-      this.load_test_world()
+     # this.load_test_world()
 
       #test = new window.BuildTest(this.world)
       #test.execute()
+
+
+      this.world.add_item(new window.House(this.world, Math.round(this.world.width/2),  Math.round(this.world.height/2)))
+
 
       this.render.update()
 
@@ -76,7 +80,6 @@ class window.Engine
           this.world.items[5+x][5+y] = null
           this.world.height_map[5+x][5+y] = 1
 
-      console.debug "hier?"
       this.world.add_item(new window.House(this.world, 10, 12))
 #
       this.world.add_item(new window.Wood(this.world, 15, 11, 10))

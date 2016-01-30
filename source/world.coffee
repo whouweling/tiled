@@ -11,6 +11,7 @@ class window.World
   map: []
   light: []
   items: []
+  cloud: []
 
   height_map: []
 
@@ -20,14 +21,14 @@ class window.World
   actors: []
   actor_queue: []
 
-  water_level: 0
+  water_level: 1
   next_id: 0
 
   changed: true
 
   version: 0
 
-  constructor: (width, height) ->
+  constructor: (width, height, seed) ->
 
     this.width = width
     this.height = height
@@ -39,6 +40,11 @@ class window.World
       this.items[x] = []
       this.actors[x] = []
       this.light[x] = []
+      this.cloud[x] = []
+
+    this.rng = new RNG(seed)
+
+
 
   get_access_map: ->
 
@@ -119,6 +125,12 @@ class window.World
       for y in [1 .. this.height]
 
         if this.items[x][y]
+          continue
+
+        if this.height_map[x][y] < this.water_level
+          continue
+
+        if this.actors[x][y]
           continue
 
         distance_to_item = Math.abs(x - start_x) + Math.abs(y - start_y)
@@ -206,10 +218,10 @@ class window.World
 
   normalize: (map, norm) ->
 
-    max = 0
+    max = null
     for x in [1 .. this.width]
         for y in [1 .. this.height]
-          if map[x][y] > max
+          if max == null or map[x][y] > max
             max = map[x][y]
 
     for x in [1 .. this.width]
@@ -223,13 +235,25 @@ class window.World
       this.height_map[x] = []
       for y in [1 .. this.height]
         this.height_map[x][y] = 2
-        if Math.round((Math.random()*20)) == 1
-          this.height_map[x][y] = Math.floor((Math.random()*1000)) - 500
+        if this.rng.random(1, 10) == 1
+          this.height_map[x][y] = this.rng.random(-200, 300)
 
 
-    this.smoothen(this.height_map, 20)
-    this.normalize(this.height_map, 4)
+    this.smoothen(this.height_map, 5)
+    this.normalize(this.height_map, 6)
 
+
+  create_cloud_map: ->
+    for x in [1 .. this.width]
+      this.cloud[x] = []
+      for y in [1 .. this.height]
+        this.cloud[x][y] = 2
+        if this.rng.random(1, 20) == 1
+          this.cloud[x][y] = this.rng.random(1, 500)
+
+
+    this.smoothen(this.cloud, 5)
+    this.normalize(this.cloud, 6)
 
   find_item: (start_x, start_y, object, in_pile) ->
 
@@ -267,8 +291,15 @@ class window.World
 
 
   cycle: ->
+
     for x in [1 .. this.width]
       for y in [1 .. this.height]
+
+        if x == this.width
+          this.cloud[x][y] = this.cloud[1][y]
+        else
+          this.cloud[x][y] = this.cloud[x+1][y]
+
 
         if not this.items[x][y]
           continue
@@ -283,6 +314,7 @@ class window.World
 
 
     this.create_height_map()
+    this.create_cloud_map()
 
 
 
@@ -305,7 +337,7 @@ class window.World
     for x in [1 .. this.width]
       this.light[x] = []
       for y in [1 .. this.height]
-        this.light[x][y] = parseInt(factor*(max_height-this.height_map[x][y]), 10) + parseInt(Math.random()*2, 10)
+        this.light[x][y] = parseInt(factor*(max_height-this.height_map[x][y]), 10) + this.rng.random(1, 3)
 
 
   populate: ->
@@ -314,7 +346,7 @@ class window.World
     for x in [1 .. this.width]
       plains[x] = []
       for y in [1 .. this.height]
-        plains[x][y] = Math.floor((Math.random()*10))
+        plains[x][y] =  this.rng.random(1, 10)
 
     this.smoothen(plains, 10)
     this.normalize(plains, 4)
@@ -331,7 +363,7 @@ class window.World
           this.map[x][y] = new window.Dirt(this, x, y, this.height_map[x][y])
         else
 
-          if Math.floor((Math.random()*40)) == 1
+          if this.rng.random(1, 40) == 1
             this.items[x][y] = new window.Wheat(this, x, y, this.height_map[x][y])
 
           if plains[x][y] == 4

@@ -28,8 +28,8 @@ class window.Control
     tile_height = this.renderer.tile_height
 
     # Translate x,y to isometric x,y
-    x = (((cursor_x - this.renderer.viewport_offset_x)  * .25) - 10)
-    y = ((cursor_y - this.renderer.viewport_offset_y) - 100) * this.renderer.zoom
+    x = (((cursor_x - this.renderer.viewport_offset_x)  * .25) - 10) / this.renderer.zoom
+    y = ((cursor_y - this.renderer.viewport_offset_y) - 100) / this.renderer.zoom
 
 
     return {
@@ -75,10 +75,8 @@ class window.Control
 
 
       if this.move_map
-        this.renderer.x_offset = this.base_offset_x + (this.move_map.x - cursor.x)
-        this.renderer.y_offset = this.base_offset_y + (this.move_map.y - cursor.y)
-
-
+        this.renderer.x_offset = parseInt(this.base_offset_x + (this.move_map.x - cursor.x) * this.renderer.zoom, 10)
+        this.renderer.y_offset = parseInt( this.base_offset_y + (this.move_map.y - cursor.y) * this.renderer.zoom, 10)
 
 
     $(control_surface).mousedown (event) =>

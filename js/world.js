@@ -17,6 +17,8 @@
 
     World.prototype.items = [];
 
+    World.prototype.cloud = [];
+
     World.prototype.height_map = [];
 
     World.prototype.task = [];
@@ -27,7 +29,7 @@
 
     World.prototype.actor_queue = [];
 
-    World.prototype.water_level = 0;
+    World.prototype.water_level = 1;
 
     World.prototype.next_id = 0;
 
@@ -35,7 +37,7 @@
 
     World.prototype.version = 0;
 
-    function World(width, height) {
+    function World(width, height, seed) {
       var i, ref, x;
       this.width = width;
       this.height = height;
@@ -45,7 +47,9 @@
         this.items[x] = [];
         this.actors[x] = [];
         this.light[x] = [];
+        this.cloud[x] = [];
       }
+      this.rng = new RNG(seed);
     }
 
     World.prototype.get_access_map = function() {
@@ -131,6 +135,12 @@
       for (x = i = 1, ref = this.width; 1 <= ref ? i <= ref : i >= ref; x = 1 <= ref ? ++i : --i) {
         for (y = j = 1, ref1 = this.height; 1 <= ref1 ? j <= ref1 : j >= ref1; y = 1 <= ref1 ? ++j : --j) {
           if (this.items[x][y]) {
+            continue;
+          }
+          if (this.height_map[x][y] < this.water_level) {
+            continue;
+          }
+          if (this.actors[x][y]) {
             continue;
           }
           distance_to_item = Math.abs(x - start_x) + Math.abs(y - start_y);
@@ -252,10 +262,10 @@
 
     World.prototype.normalize = function(map, norm) {
       var i, j, k, max, ref, ref1, ref2, results, x, y;
-      max = 0;
+      max = null;
       for (x = i = 1, ref = this.width; 1 <= ref ? i <= ref : i >= ref; x = 1 <= ref ? ++i : --i) {
         for (y = j = 1, ref1 = this.height; 1 <= ref1 ? j <= ref1 : j >= ref1; y = 1 <= ref1 ? ++j : --j) {
-          if (map[x][y] > max) {
+          if (max === null || map[x][y] > max) {
             max = map[x][y];
           }
         }
@@ -280,13 +290,28 @@
         this.height_map[x] = [];
         for (y = j = 1, ref1 = this.height; 1 <= ref1 ? j <= ref1 : j >= ref1; y = 1 <= ref1 ? ++j : --j) {
           this.height_map[x][y] = 2;
-          if (Math.round(Math.random() * 20) === 1) {
-            this.height_map[x][y] = Math.floor(Math.random() * 1000) - 500;
+          if (this.rng.random(1, 10) === 1) {
+            this.height_map[x][y] = this.rng.random(-200, 300);
           }
         }
       }
-      this.smoothen(this.height_map, 20);
-      return this.normalize(this.height_map, 4);
+      this.smoothen(this.height_map, 5);
+      return this.normalize(this.height_map, 6);
+    };
+
+    World.prototype.create_cloud_map = function() {
+      var i, j, ref, ref1, x, y;
+      for (x = i = 1, ref = this.width; 1 <= ref ? i <= ref : i >= ref; x = 1 <= ref ? ++i : --i) {
+        this.cloud[x] = [];
+        for (y = j = 1, ref1 = this.height; 1 <= ref1 ? j <= ref1 : j >= ref1; y = 1 <= ref1 ? ++j : --j) {
+          this.cloud[x][y] = 2;
+          if (this.rng.random(1, 20) === 1) {
+            this.cloud[x][y] = this.rng.random(1, 500);
+          }
+        }
+      }
+      this.smoothen(this.cloud, 5);
+      return this.normalize(this.cloud, 6);
     };
 
     World.prototype.find_item = function(start_x, start_y, object, in_pile) {
@@ -330,6 +355,11 @@
           var j, ref1, results1;
           results1 = [];
           for (y = j = 1, ref1 = this.height; 1 <= ref1 ? j <= ref1 : j >= ref1; y = 1 <= ref1 ? ++j : --j) {
+            if (x === this.width) {
+              this.cloud[x][y] = this.cloud[1][y];
+            } else {
+              this.cloud[x][y] = this.cloud[x + 1][y];
+            }
             if (!this.items[x][y]) {
               continue;
             }
@@ -344,6 +374,7 @@
     World.prototype.generate = function() {
       var i, ref, results, x, y;
       this.create_height_map();
+      this.create_cloud_map();
       results = [];
       for (x = i = 1, ref = this.width; 1 <= ref ? i <= ref : i >= ref; x = 1 <= ref ? ++i : --i) {
         this.map[x] = [];
@@ -377,7 +408,7 @@
           var l, ref3, results1;
           results1 = [];
           for (y = l = 1, ref3 = this.height; 1 <= ref3 ? l <= ref3 : l >= ref3; y = 1 <= ref3 ? ++l : --l) {
-            results1.push(this.light[x][y] = parseInt(factor * (max_height - this.height_map[x][y]), 10) + parseInt(Math.random() * 2, 10));
+            results1.push(this.light[x][y] = parseInt(factor * (max_height - this.height_map[x][y]), 10) + this.rng.random(1, 3));
           }
           return results1;
         }).call(this));
@@ -391,7 +422,7 @@
       for (x = i = 1, ref = this.width; 1 <= ref ? i <= ref : i >= ref; x = 1 <= ref ? ++i : --i) {
         plains[x] = [];
         for (y = j = 1, ref1 = this.height; 1 <= ref1 ? j <= ref1 : j >= ref1; y = 1 <= ref1 ? ++j : --j) {
-          plains[x][y] = Math.floor(Math.random() * 10);
+          plains[x][y] = this.rng.random(1, 10);
         }
       }
       this.smoothen(plains, 10);
@@ -408,7 +439,7 @@
             if (this.height_map[x][y] < this.water_level) {
               results1.push(this.map[x][y] = new window.Dirt(this, x, y, this.height_map[x][y]));
             } else {
-              if (Math.floor(Math.random() * 40) === 1) {
+              if (this.rng.random(1, 40) === 1) {
                 this.items[x][y] = new window.Wheat(this, x, y, this.height_map[x][y]);
               }
               if (plains[x][y] === 4) {
