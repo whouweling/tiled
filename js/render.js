@@ -22,8 +22,8 @@
     }
 
     Render.prototype.resize = function() {
-      this.viewport_width = parseInt(window.innerWidth / (this.tile_width * this.zoom) / 2, 10);
-      this.viewport_height = parseInt(window.innerHeight / (this.tile_height * this.zoom) / 2, 10);
+      this.viewport_width = parseInt(window.innerWidth / (this.tile_width * this.zoom) / 2, 10) - 2;
+      this.viewport_height = parseInt(window.innerHeight / (this.tile_height * this.zoom) / 2, 10) - 2;
       this.viewport_offset_x = window.innerWidth / 2;
       return this.viewport_offset_y = -120;
     };
